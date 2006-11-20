@@ -1,0 +1,4 @@
+name = hcalendar
+description = hCalendar API, add and display hCalendar microformats
+version = 0.1
+package = Microformats
