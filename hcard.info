@@ -1,0 +1,4 @@
+name = hCard
+description = hCard Generator
+version = 0.1
+package = Microformats
