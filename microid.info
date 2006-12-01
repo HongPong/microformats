@@ -1,6 +1,6 @@
 ; $Id$
-name = microid
-description = This module generates a MicroID hash from the users email address and URL from their profile and embeds it in their content.
+name = MicroID
+description = This module generates a MicroID hash from the user's e-mail address and URL from their profile and embeds it in their content.
 dependencies = profile
 package = Microformats
 version = 0.1

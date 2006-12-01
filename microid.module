@@ -1,100 +1,71 @@
 <?php
 /* $Id$ */
 
-/**************************************************
-/	MicroID Module
-/	Author: Tane Piper (digitalspaghetti@gmail.com)
-/	URI: http://drupal.org/projects/microformats
-/	Author URI: http://digitalspaghetti.me.uk
-/***************************************************/
-
 /**
- * Display help and module information
- * @param section which section of the site we're displaying help 
- * @return help text for section
+ * @file
+ * The MicroID Module generates a microid class and meta tag 
+ * See the specs for MicroID at http://microid.org
+ * See this module in action at http://digitalspaghetti.me.uk
  */
-function microid_help($section='') {
-	$output = '';
 
-	switch ($section) {
-    	case "admin/help#microid":
-      		$output = '<p>'.  t("This module creates a MicroID and embeds it in users posts."). '</p>';
-      	break;
-      	
-      	case "admin/modules#description":
-      		$output = '<p>'.  t("This module creates a MicroID and embeds it in users posts."). '</p>';
-      	break;
-  	}
-
-  	return $output;
+function microid_help($section=''){
+  $output = '';
+  
+  switch ($section){
+    case "admin/help#microid":
+	  $output = '<p>'.  t("This module creates a MicroID and embeds it in users posts."). '</p>';
+	  break;
+    case "admin/modules#description":
+      $output = '<p>'.  t("This module creates a MicroID and embeds it in users posts."). '</p>';
+      break;
+  }
+  
+  return $output;
 }
 
-/**
- * Valid permissions for this module
- * @return array An array of valid permissions for the microid module
- */
-function microid_perm() {
+function microid_perm(){
   return array('access content');
 }
 
 
-/***
+/**
  * function microid_genhash($email, $url)
  * This function generates the hash from
  * The users email and profile_homepage
- ***/
+ */
 
-function microid_genhash($email, $url)
-{
-	return sha1(sha1("mailto:" . trim($email)) . sha1(trim($url)));
+function microid_genhash($email, $url){
+  return sha1(sha1("mailto:" . trim($email)) . sha1(trim($url)));
 }
-
-/***
- * function microid_nodeapi(&$node, $op, $teaser = NULL, $page = NULL)
- * Thanks to robrechtj on #drupal-support for helping me figure out
- * a few things on here!
- ***/
 
 function microid_nodeapi(&$node, $op, $teaser = NULL, $page = NULL){
- 	switch($op) {
- 	 	case 'load':
- 	 		$nauthor = user_load(array('uid' => $node->uid));
- 	 		return array('user_email' => $nauthor->email, 'user_homepage' => $nauthor->profile_homepage); 	 		
- 	 	break;
- 	 	case 'view':
- 	 	
- 	 		$hash = microid_genhash($node->user_email, $node->user_homepage);
- 	 		
-		  	if ($page && !$teaser) {
-			   drupal_set_html_head('<meta name="microid" content="' . $hash . '" />');
-			}
-						
-			drupal_add_js('$(function(){$("div[@id*=node]").addClass("microid-' . $hash . '")});', 'inline');
-					
-		break;
-	}
+  switch($op) {
+    case 'load':
+ 	  $nauthor = user_load(array('uid' => $node->uid));
+ 	  return array('user_email' => $nauthor->email, 'user_homepage' => $nauthor->profile_homepage); 	 		
+ 	  break;
+ 	case 'view':
+ 	  $hash = microid_genhash($node->user_email, $node->user_homepage);
+ 	  if ($page && !$teaser){
+	    drupal_set_html_head('<meta name="microid" content="' . $hash . '" />');
+	  }
+	  
+	  drupal_add_js('$(function(){$("div[@id*=node]").addClass("microid-' . $hash . '")});', 'inline');
+	  break;
+  }
 }
 
-/***
- * function microid_comment($a1 = NULL, $op
- * currently not working - this function should get the author of a comments
- * uid and generate a microid for them.  If the poster is Anonymous, should 
- * not add class.
- ***/
-
 function microid_comment($a1 = NULL, $op){
- 	switch($op) {
- 	 	case 'load':
- 	 		$cauthor = user_load(array('uid' => $comment->uid));
- 	 		return array('user_email' => $cauthor->email, 'user_homepage' => $cauthor->profile_homepage); 	 		
- 	 	break;
- 	 	case 'view':
- 	 		if ($comment->uid > 0) {
- 	 		
- 	 			$hash = microid_genhash($comment->user_email, $comment->user_homepage);
-				  						
-				drupal_add_js('$(function(){$("a[@id*=comment]").addClass("microid-' . $hash . '")});', 'inline');
-			}
-			break;
-	}
+  switch($op) {
+    case 'load':
+ 	  $cauthor = user_load(array('uid' => $comment->uid));
+ 	  return array('user_email' => $cauthor->email, 'user_homepage' => $cauthor->profile_homepage); 	 		
+ 	  break;
+ 	case 'view':
+ 	  if ($comment->uid > 0){
+ 	    $hash = microid_genhash($comment->user_email, $comment->user_homepage);
+		drupal_add_js('$(function(){$("a[@id*=comment]").addClass("microid-' . $hash . '")});', 'inline');
+	  }
+	  break;
+  }
 }
