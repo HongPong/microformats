@@ -4,7 +4,7 @@
 /**************************************************
 /	MicroID Module
 /	Author: Tane Piper (digitalspaghetti@gmail.com)
-/	URI: http://drupal.org/projects/microid
+/	URI: http://drupal.org/projects/microformats
 /	Author URI: http://digitalspaghetti.me.uk
 /***************************************************/
 
@@ -58,8 +58,8 @@ function microid_genhash($email, $url)
 function microid_nodeapi(&$node, $op, $teaser = NULL, $page = NULL){
  	switch($op) {
  	 	case 'load':
- 	 		$author = user_load(array('uid' => $node->uid));
- 	 		return array('user_email' => $author->email, 'user_homepage' => $author->profile_homepage); 	 		
+ 	 		$nauthor = user_load(array('uid' => $node->uid));
+ 	 		return array('user_email' => $nauthor->email, 'user_homepage' => $nauthor->profile_homepage); 	 		
  	 	break;
  	 	case 'view':
  	 	
@@ -72,5 +72,29 @@ function microid_nodeapi(&$node, $op, $teaser = NULL, $page = NULL){
 			drupal_add_js('$(function(){$("div[@id*=node]").addClass("microid-' . $hash . '")});', 'inline');
 					
 		break;
+	}
+}
+
+/***
+ * function microid_comment($a1 = NULL, $op
+ * currently not working - this function should get the author of a comments
+ * uid and generate a microid for them.  If the poster is Anonymous, should 
+ * not add class.
+ ***/
+
+function microid_comment($a1 = NULL, $op){
+ 	switch($op) {
+ 	 	case 'load':
+ 	 		$cauthor = user_load(array('uid' => $comment->uid));
+ 	 		return array('user_email' => $cauthor->email, 'user_homepage' => $cauthor->profile_homepage); 	 		
+ 	 	break;
+ 	 	case 'view':
+ 	 		if ($comment->uid > 0) {
+ 	 		
+ 	 			$hash = microid_genhash($comment->user_email, $comment->user_homepage);
+				  						
+				drupal_add_js('$(function(){$("a[@id*=comment]").addClass("microid-' . $hash . '")});', 'inline');
+			}
+			break;
 	}
 }
