@@ -27,7 +27,7 @@ function microid_help($section='') {
   	}
 
   	return $output;
-} // function microid_help
+}
 
 /**
  * Valid permissions for this module
@@ -35,20 +35,8 @@ function microid_help($section='') {
  */
 function microid_perm() {
   return array('access content');
-} // function onthisdate_perm()
-
-/**
- * Function to take action on user actions
- *
- */
-
-function microid_user($type, &$edit, &$user, $category = NULL) {
-	switch($type) {
-		case 'update':
-			return microid_update_profile($edit,$user, $category);
-	 
-	} 
 }
+
 
 /***
  * function microid_genhash($email, $url)
@@ -62,24 +50,6 @@ function microid_genhash($email, $url)
 }
 
 /***
- * function microid_update_profile(&$edit,&$user, $category)
- * This function is when the user updates their profile
- ***/
-
-function microid_update_profile(&$edit,&$user, $category) {
-	$useremail =  $user->email;
-	$useruri = $edit['profile_homepage'];
-	
-	$hash = microid_genhash($useremail, $useruri);
-	
-	$get_fid = "SELECT fid FROM {profile_fields} WHERE name = 'profile_microid'";
-	$result = db_query($get_fid);
-	$field_id = db_result($result);
-	
-	db_query("INSERT INTO {profile_values} (fid, uid, value) VALUES (%d, %d, '%s')", $field_id, $user->uid, $hash);
-}
-
-/***
  * function microid_nodeapi(&$node, $op, $teaser = NULL, $page = NULL)
  * Thanks to robrechtj on #drupal-support for helping me figure out
  * a few things on here!
@@ -89,21 +59,18 @@ function microid_nodeapi(&$node, $op, $teaser = NULL, $page = NULL){
  	switch($op) {
  	 	case 'load':
  	 		$author = user_load(array('uid' => $node->uid));
- 	 		return array('microid' => $author->profile_microid);
+ 	 		return array('user_email' => $author->email, 'user_homepage' => $author->profile_homepage); 	 		
  	 	break;
  	 	case 'view':
+ 	 	
+ 	 		$hash = microid_genhash($node->user_email, $node->user_homepage);
+ 	 		
 		  	if ($page && !$teaser) {
-			   drupal_set_html_head('<meta name="microid" content="' . $node->microid . '" />');
+			   drupal_set_html_head('<meta name="microid" content="' . $hash . '" />');
 			}
-			
-			// Below code is not working 01/12/06 - If you can see whats wrong to patch it
-			// please feel free to add to project issues.
-			
-			if ($teaser) {
-				$node->teaser = '<span class="microid-' . $node->microid . '">' . $node->teaser . '</span>'; 	
-			} else {
-				$node->body = '<span class="microid-' . $node->microid . '">' . $node->body . '</span>';
-			}		
+						
+			drupal_add_js('$(function(){$("div[@id*=node]").addClass("microid-' . $hash . '")});', 'inline');
+					
 		break;
 	}
 }
