@@ -42,20 +42,20 @@ function microid_nodeapi(&$node, $op, $teaser = NULL, $page = NULL){
   switch($op) {
     case 'load':
  	  $nauthor = user_load(array('uid' => $node->uid));
- 	  return array('user_email' => $nauthor->email, 'user_homepage' => $nauthor->profile_homepage); 	 		
+ 	  return array('user_email' => $nauthor->email); 	 		
  	  break;
  	case 'view':
- 	  $hash = microid_genhash($node->user_email, $node->user_homepage);
+ 		$hashurl = "http://" . $_SERVER["SERVER_NAME"] . "/node/" . $node->nid;
+ 	  $hash = microid_genhash($node->user_email, $hashurl);
  	  if ($page && !$teaser){
 	    drupal_set_html_head('<meta name="microid" content="' . $hash . '" />');
 	  }
-	  
 	  drupal_add_js('$(function(){$("div[@id*=node]").addClass("microid-' . $hash . '")});', 'inline');
 	  break;
   }
 }
 
-function microid_comment($a1 = NULL, $op){
+/*function microid_comment($a1 = NULL, $op){
   switch($op) {
     case 'load':
  	  $cauthor = user_load(array('uid' => $comment->uid));
@@ -68,4 +68,4 @@ function microid_comment($a1 = NULL, $op){
 	  }
 	  break;
   }
-}
+}*/
