@@ -50,7 +50,7 @@ function microid_nodeapi(&$node, $op, $teaser = NULL, $page = NULL){
  	  if ($page && !$teaser){
 	    drupal_set_html_head('<meta name="microid" content="' . $hash . '" />');
 	  }
-	  drupal_add_js('$(function(){$("div[@id*=node]").addClass("microid-' . $hash . '")});', 'inline');
+	  drupal_add_js('$(function(){$("div[@id=node-' . $node->nid . ']").addClass("microid-' . $hash . '")});', 'inline');
 	  break;
   }
 }
