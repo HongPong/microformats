@@ -45,13 +45,11 @@ function microid_nodeapi(&$node, $op, $teaser = NULL, $page = NULL){
  	  return array('user_email' => $nauthor->mail); 	 		
  	  break;
     case 'view':
-      watchdog('DS','<pre>'. print_r($node,true) .'</pre>');
+      //watchdog('DS','<pre>'. print_r($node,true) .'</pre>');
       $hashurl = "http://" . $_SERVER["SERVER_NAME"] . "/node/" . $node->nid;
       $hash = microid_genhash($node->user_email, $hashurl);
  	  
     if ($page && !$teaser){
- 	    drupal_set_html_head('<meta name="url" content="' . $hashurl . '" />');
- 	    drupal_set_html_head('<meta name="email" content="' . $node->user_email . '" />');
 	    drupal_set_html_head('<meta name="microid" content="' . $hash . '" />');
 	  }
 	  
