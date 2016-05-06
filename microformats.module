@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains microformats.module..
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function microformats_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the microformats module.
+    case 'help.page.microformats':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Microformats to provide support for exchanging data objects') . '</p>';
+      return $output;
+
+    default:
+  }
+}
