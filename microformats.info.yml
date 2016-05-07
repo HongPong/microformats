@@ -1,5 +1,5 @@
-name: microformats
+name: Microformats
 type: module
 description: Microformats to provide support for exchanging data objects
 core: 8.x
-package: drupalmicroformats
+package: Microformats
