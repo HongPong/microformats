@@ -1,0 +1,16 @@
+contactinfo:
+  version: VERSION
+  js:
+    microformats_hcard_site.admin.js: {}
+  css:
+    component:
+      css/microformats_hcard_site.admin.css: {}
+  dependencies:
+    - core/jquery
+    - core/drupalSettings
+
+contactinfo-block:
+  version: VERSION
+  css:
+    theme:
+      css/microformats_hcard_site.css: {}

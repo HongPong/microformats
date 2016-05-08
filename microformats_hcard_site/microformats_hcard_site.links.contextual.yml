@@ -1,0 +1,4 @@
+contactinfo_configure:
+  title: 'Edit information'
+  route_name: 'microformats_hcard_site.configuration'
+  group: 'block'

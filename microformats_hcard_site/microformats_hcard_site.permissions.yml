@@ -1,0 +1,3 @@
+administer microformats_hcard_site:
+  title: 'Administer Microformats Site-wide hCard'
+  description: 'Edit Site-wide hCard contact information for this site.'

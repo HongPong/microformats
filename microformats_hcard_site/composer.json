@@ -1,0 +1,6 @@
+{
+  "name": "drupal/microformats_hcard_site",
+  "description": "This is an composer.json for microformats_hcard_site module.",
+  "type": "drupal-module",
+  "license": "GPL-2.0+"
+}

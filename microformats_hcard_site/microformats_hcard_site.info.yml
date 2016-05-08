@@ -1,0 +1,8 @@
+name: Microformats Site-wide hCard
+description: Collects site-wide contact information and displays it in an hCard block.
+package: Microformats
+
+configure: microformats_hcard_site.configuration
+
+type: module
+core: 8.x

@@ -1,0 +1,177 @@
+<?php
+/**
+ * @file
+ * Collects contact information and displays it in an hCard block.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function microformats_hcard_site_help($route_name, \Drupal\Core\Routing\RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.microformats_hcard_site':
+      $output = '<p>' . t('Contact information that you provide will be displayed on the site in the <a href="http://microformats.org/wiki/hcard">hCard microformat</a>. An hCard is a small bundle of code that you want to put on your web site so that Google Maps (and other mapping services) can more easily index the site&rsquo;s location information.') . '</p>';
+      return $output;
+
+    case 'microformats_hcard_site.configuration':
+      $output = '<p>' . t('Enter your site’s contact information into the appropriate fields. All fields are optional.') . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function microformats_hcard_site_theme($existing, $type, $theme, $path) {
+  return array(
+    'microformats_hcard_site_admin_settings' => array(
+      'render element' => 'form',
+    ),
+    'microformats_hcard_site' => array(
+      'variables' => array(
+        'microformats_hcard_site' => NULL,
+        'type' => 'personal',
+        'given_name' => NULL,
+        'family_name' => NULL,
+        'org' => NULL,
+        'tagline' => NULL,
+        'street_address' => NULL,
+        'extended_address' => NULL,
+        'locality' => NULL,
+        'region' => NULL,
+        'postal_code' => NULL,
+        'country' => NULL,
+        'longitude' => NULL,
+        'latitude' => NULL,
+        'phones' => array(),
+        'faxes' => array(),
+        'email' => NULL,
+      ),
+    ),
+  );
+}
+
+/**
+ * Theme preprocess function for the contact information block.
+ *
+ * @param array $variables
+ *   as defined by hook_theme().
+ *   $variable['microformats_hcard_site'] is equivalent to microformats_hcard_site_get_microformats_hcard_site().
+ */
+function template_preprocess_microformats_hcard_site(&$variables) {
+  $config = \Drupal::config('microformats_hcard_site.settings');
+  $site_config = \Drupal::config('system.site');
+
+  // Build $variables from scratch.
+  $variables['type'] = $config->get('type');
+  $variables['given_name'] = $config->get('fn_n.given_name');
+  $variables['family_name'] = $config->get('fn_n.family_name');
+  $variables['org'] = $config->get('use_site_name') ? $site_config->get('name') : $config->get('org');
+  $variables['street_address'] = $config->get('street_address');
+  $variables['extended_address'] = $config->get('extended_address');
+  $variables['locality'] = $config->get('locality');
+  $variables['region'] = $config->get('region');
+  $variables['postal_code'] = $config->get('postal_code');
+  $variables['country'] = $config->get('country');
+  $variables['longitude'] = $config->get('longitude');
+  $variables['latitude'] = $config->get('latitude');
+  $variables['tagline'] = $config->get('use_site_slogan') ? $site_config->get('slogan') : $config->get('tagline');
+
+  // Generate formatted longitude and latitude.
+  $variables['longitude_formatted'] = microformats_hcard_site_coord_convert($variables['longitude'], 'longitude');
+  $variables['latitude_formatted'] = microformats_hcard_site_coord_convert($variables['latitude'], 'latitude');
+
+  $voice = $config->get('phone.voice');
+  // Generates the output for the 'phones' variable.
+  if ($voice) {
+    $phone_text = $voice;
+    $phones = explode(',', $phone_text);
+    $variables['phones'] = array_map('trim', $phones);
+  }
+
+  $fax = $config->get('phone.fax');
+  // Generates the output for the 'faxes' variable.
+  if ($fax) {
+    $fax_text = $fax;
+    $faxes = explode(',', $fax_text);
+    $variables['faxes'] = array_map('trim', $faxes);
+  }
+
+  $email = $config->get('email');
+  // Generate the output for the 'email' variable.
+  if ($email) {
+    // Use obfuscation provided by invisimail module.
+    if (function_exists('invisimail_encode_html')) {
+
+      // Todo invisimail is NOT available on drupal 8.
+      $variables['email'] = invisimail_encode_html($email);
+      $variables['email_url'] = INVISIMAIL_MAILTO_ASCII . $variables['email'];
+    }
+    else {
+      $variables['email'] = $email;
+      $variables['email_url'] = 'mailto:' . $email;
+    }
+  }
+
+  // Generate ID.
+  $id = 'microformats_hcard_site';
+  if ($config->get('type') === 'personal') {
+    $id .= !empty($config->get('fn_n.given_name')) ? '-' . $config->get('fn_n.given_name') : '';
+    $id .= !empty($config->get('fn_n.family_name')) ? '-' . $config->get('fn_n.family_name') : '';
+  }
+  else {
+    $id .= !empty($config->get('org')) ? '-' . $config->get('org') : '';
+  }
+  $variables['id'] = \Drupal\Component\Utility\Html::getUniqueId($id);
+}
+
+
+/**
+ * Theme function for the Contact Info settings form.
+ *
+ * It's just a wrapper so that themers can do what they want with this form.
+ */
+function theme_microformats_hcard_site_admin_settings($variables) {
+  $form = $variables['form'];
+  return drupal_render_children($form);
+  // Todo this is deprecated in drupal 8.1.
+}
+
+/**
+ * Helper function to convert longitude or latitude points.
+ *
+ * Convert a decimal-degree longitude or latitude point into degrees and
+ * decimal minutes.
+ *
+ * @param float $decimal
+ *   Decimal value for a longitude or latitude point.
+ * @param string $direction
+ *   Strings 'longitude' or 'latitude' are the only acceptable inputs.
+ *
+ * @return string
+ *   String containing a single character for N, S, E, or W, the degrees as
+ *   whole number, and minutes as a decimal value.
+ */
+function microformats_hcard_site_coord_convert($decimal, $direction) {
+  $decimal = (float) $decimal;
+  if (!$decimal) {
+    return FALSE;
+  }
+  switch ($direction) {
+    case 'longitude':
+      $coord_direction = ($decimal < 0) ? 'W' : 'E';
+      break;
+
+    case 'latitude':
+      $coord_direction = ($decimal < 0) ? 'S' : 'N';
+      break;
+
+    default:
+      return FALSE;
+  }
+
+  $coord_degrees = (int) $decimal;
+  $coord_minutes = abs(fmod($decimal, 1) * 60);
+
+  return $coord_direction . ' ' . $coord_degrees . '° ' . $coord_minutes . '"';
+}

@@ -1,0 +1,6 @@
+contactinfo.admin:
+  title: 'Microformats Site-wide hCard settings'
+  description: 'Edit your machine-readable contact information'
+  parent: system.admin_config_development
+  route_name: microformats_hcard_site.configuration
+  weight: 100

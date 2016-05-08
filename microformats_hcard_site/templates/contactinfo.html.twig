@@ -1,0 +1,106 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display the hcard in a block.
+ *
+ * Available variables:
+ *
+ * - $contactinfo: variable_get('contactinfo', array()).
+ *
+ * - $type: Either 'personal' or 'business'.
+ *
+ * - $given_name: The given-name value.
+ * - $family_name: The family-name value.
+ * - $org: The name of the business or organization.
+ *
+ * - $tagline: The tagline.
+ *
+ * - $street_address: The street-address value.
+ * - $extended_address: The extended-address value.
+ * - $locality: The locality value. In USA, this is the city.
+ * - $region: The region value. In the USA, this is the state.
+ * - $postal_code: The postal-code value.
+ * - $country: The country-name value.
+ *
+ * - $longitude: The longitude value in decimal degrees format.
+ * - $latitude: The latitude value in decimal degrees format.
+ * - $longitude_formatted: The longitude value in decimal degrees and decimal
+ *   minutes format.
+ * - $latitude_formatted: The latitude value in decimal degrees and decimal
+ *   minutes format.
+ *
+ * - $phones: An array of phone numbers.
+ * - $faxes: An array of fax numbers.
+ *
+ * - $email_url: The href for the mailto link.
+ * - $email: The email address value.
+ */
+#}
+<!--start vcard -->
+<div id="{{ id }}" class="vcard">
+{% if type == "personal" %}
+  <div class="fn n">
+{% if given_name %}
+    <span class="given-name">{{ given_name }}</span>
+{% endif %}
+{% if family_name %}
+    <span class="family-name">{{ family_name }}</span>
+{% endif %}
+{% if org %}
+    <div class="org">{{ org }}</div>
+{% endif %}
+  </div>
+{% else %}
+{% if org %}
+  <div class="fn org">{{ org }}</div>
+{% endif %}
+{% endif %}
+{% if tagline %}
+  <div class="tagline">{{ tagline }}</div>
+{% endif %}
+{% if street_address or locality or region or postal_code or country %}
+  <div class="adr">
+{% if street_address %}
+    <div class="street-address">{{ street_address }}</div>
+{% endif %}
+{% if extended_address %}
+    <div class="extended-address">{{ extended_address }}</div>
+{% endif %}
+{% if locality %}
+    <span class="locality">{{ locality }}</span>{% if region %},{% endif %}
+{% endif %}
+{% if region %}
+    <span class="region">{{ region }}</span>
+{% endif %}
+{% if postal_code %}
+    <span class="postal-code">{{ postal_code }}</span>
+{% endif %}
+{% if country %}
+    <span class="country-name">{{ country }}</span>
+{% endif %}
+  </div>
+{% endif %}
+{% if longitude or latitude %}
+  <div class="geo">
+    <abbr class="longitude" title="{{ longitude }}">{{ longitude_formatted }}</abbr>
+    <abbr class="latitude" title="{{ latitude }}">{{ latitude_formatted }}</abbr>
+  </div>
+{% endif %}
+{% if phones or faxes %}
+  <div class="phone">
+{% for phone in phones %}
+{% if phone %}
+    <div class="tel"><abbr class="type" title="voice">{{ 'Telephone'|t }}:</abbr> {{ phone }}</div>
+{% endif %}
+{% endfor %}
+{% for fax in faxes %}
+{% if fax %}
+    <div class="tel"><abbr class="type" title="fax">{{ 'Fax'|t }}:</abbr> {{ fax }}</div>
+{% endif %}
+{% endfor %}
+  </div>
+{% endif %}
+{% if email %}
+  <a href="{{ email_url }}" class="email">{{ email }}</a>
+{% endif %}
+</div><!--end of vcard-->

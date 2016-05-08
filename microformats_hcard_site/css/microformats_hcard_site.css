@@ -1,0 +1,12 @@
+/**
+ * @file
+ * Contact Information CSS rules.
+ */
+
+.block-contactinfo .geo {
+  display: none;
+}
+
+.block-contactinfo .phone abbr {
+  border-bottom: none;
+}

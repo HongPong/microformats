@@ -1,0 +1,68 @@
+# Schema for the configuration files of the Contact Info module.
+
+microformats_hcard_site.settings:
+  type: config_object
+  label: 'Microformats Site-wide hCard Config Info settings'
+  mapping:
+    type:
+      type: string
+      label: 'Type'
+    fn_n:
+      type: mapping
+      label: 'Full name'
+      mapping:
+        given_name:
+          type: string
+          label: 'Your first name'
+        family_name:
+          type: string
+          label: 'Your last name'
+    org:
+      type: string
+      label: 'Organization/Business Name'
+    use_site_name:
+      type: boolean
+      label: 'Use site name'
+    tagline:
+      type: string
+      label: 'Tagline'
+    use_site_slogan:
+      type: boolean
+      label: 'Use site slogan'
+    street_address:
+      type: string
+      label: 'Street Address'
+    extended_address:
+      type: string
+      label: 'Extended Address'
+    locality:
+      type: string
+      label: 'City'
+    region:
+      type: string
+      label: 'State/Province'
+    postal_code:
+      type: string
+      label: 'Postal Code'
+    country_name:
+      type: string
+      label: 'Country'
+    longitude:
+      type: string
+      label: 'Longitude'
+    latitude:
+      type: string
+      label: 'Latidude'
+    phone:
+      type: mapping
+      label: 'Phones'
+      mapping:
+        voice:
+          type: string
+          label: 'Voice Phone Number(s)'
+        fax:
+          type: string
+          label: 'Fax numbers+'
+    email:
+      type: string
+      label: 'Email'

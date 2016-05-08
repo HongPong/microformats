@@ -1,0 +1,7 @@
+microformats_hcard_site.configuration:
+  path: '/admin/config/system/microformats/hcard_site'
+  defaults:
+    _form: '\Drupal\microformats_hcard_site\Form\AdminForm'
+    _title: 'Microformats Site-Wide hCard Contact information'
+  requirements:
+    _permission: 'administer microformats_hcard_site'
