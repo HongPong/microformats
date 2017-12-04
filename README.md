@@ -15,6 +15,21 @@ h-entry and webmentions. By leveraging microformats and other PHP libraries alre
 available at https://github.com/indieweb/ it should be possible to implement many
 of these formats in Drupal with minimal code duplication.
 
+Contact info feature
+====================
+
+This part of the module allows you to display your contact information in a block
+anywhere on your site. Your information is automatically formatted using the hCard
+microformat, and it can easily be customized in your theme by modifying the provided template.
+
+Edit your information by filling out an easy to use form.
+Protects your email address from spammers if you also install the Invismail module.
+All contact information fields made available as tokens.
+This module is intended to be used on smaller brochure sites or blogs, but can be
+useful for any site that needs to display a single primary contact block.
+
+For a similar solution for Drupal 6, see the hCard module.
+
 php-mf2 info
 ============
 From the Readme: https://github.com/indieweb/php-mf2/blob/master/README.md
@@ -64,7 +79,8 @@ IndieAuth etc.
 Developers
 ==========
 
-Microformats for Drupal 8 by Dan Feidt ( https://drupal.org )
-
-Originally developed by Benjamin Doherty ( https://drupal.org/u/bangpound )
+* Microformats for Drupal 8 by Dan Feidt ( https://drupal.org )
+* Sitewide Contact Info for Drupal 8 by Karthikeyan Manivasagam ( https://www.drupal.org/u/karthikeyan-manivasagam )
+* Originally developed by Benjamin Doherty ( https://drupal.org/u/bangpound )
 for Drupal 5.x 2006-2007
+* The Indieweb community ( https://github.com/indieweb )

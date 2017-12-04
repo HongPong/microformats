@@ -1,5 +1,6 @@
 name: Microformats
 type: module
-description: Microformats to provide support for exchanging data objects
+description: Microformats to provide support for exchanging data objects and site contact info
 core: 8.x
 package: Microformats
+configure: microformats.admin
